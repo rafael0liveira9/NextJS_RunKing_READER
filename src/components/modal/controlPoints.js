@@ -9,6 +9,8 @@ export default function ControlPointModal({ close, event }) {
 
     const URL_API_RUNKING = "https://api.runking.com.br/"
 
+    const URLLOCALSERVICE = "http://localhost:8000/"
+
     const handleInnerDivClick = (e) => {
         e.stopPropagation();
     }
@@ -47,17 +49,17 @@ export default function ControlPointModal({ close, event }) {
     const postCPs = async function (pc) {
         try {
 
-            // const res = await fetch(`${URL_API_RUNKING}configuration`, {
-            //     method: 'GET',
-            //     headers: {
-            //         'Authorization': localStorage.getItem("user_jwt")
-            //     },
-            //     body: JSON.stringify({
-            //         "PC": pc.uuid
-            //     })
-            // });
+            const res = await fetch(`${URLLOCALSERVICE}configuration`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    "PC": pc.uuid
+                })
+            });
 
-            // console.log("resss", res)
+            console.log("resss", res)
 
             // if (!res.ok) {
             //     console.log(`Erro na requisição: ${res.status} - ${res.statusText}`);

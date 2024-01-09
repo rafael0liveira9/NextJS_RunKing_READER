@@ -1,8 +1,8 @@
 'use client'
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useContext } from "react"
 import { useRouter, usePathname } from "next/navigation";
-
+import { GlobalContext } from "@/context/global"
 import Header from "@/components/header";
 import Footer from "@/components/footer";
 import FloatMenu from "@/components/floatMenu";
@@ -12,12 +12,9 @@ import Loading from "@/components/loading";
 
 export default function EventSelect() {
 
-  const router = useRouter();
   const path = usePathname();
-  const [isReading, setisReading] = useState(false)
-
-  const URL_API_RUNKING = "https://kingofit.com.br/apirunkingmaxprov3/";
-
+  const { setisReading, isReading } = useContext(GlobalContext)
+  const URLLOCALSERVICE = "http://localhost:8000/"
 
   function alreadyLogin() {
     const user = {
@@ -46,43 +43,25 @@ export default function EventSelect() {
     }
   }
 
-  async function getConfig() {
 
-    // localStorage.setItem("IS_SEND_TO_CLOUD", false);
-    // localStorage.setItem("dateTimeSystem", "2024-01-01T03:00:00.448740376Z");
-    // localStorage.setItem("serialNumber", "37022435146");
-    // localStorage.setItem("status", "Parado");
-    // localStorage.setItem("ip", "000.000.000.00");
-    // localStorage.setItem("totalReader", 240);
-    // localStorage.setItem("totalCloud", 890);
-
-    // try {
-    //   console.log("Antes da requisição fetch");
-    //   const response = await fetch(`${URL_API_RUNKING}getRealTimeData`, {
-    //     method: 'GET',
-    //     headers: {
-    //       'Authorization': localStorage.getItem("user_jwt")
-    //     }
-    //   });
-
-
-    // } catch (error) {
-    //   console.error("Erro na requisição:", error);
-    // }
-  }
 
   useEffect(() => {
     alreadyLogin();
-    getConfig();
-
-    // const intervalId = setInterval(() => {
-    //   getConfig();
-    //   console.log("log", data)
-    // }, 1000);
-
-    // return () => clearInterval(intervalId);
-
   }, [path]);
+
+  const start = async () => {
+    const res = await fetch(`${URLLOCALSERVICE}startReader`, {
+      method: 'GET'
+    });
+
+    console.log("resss", res)
+  }
+  const stop = async () => {
+    const res = await fetch(`${URLLOCALSERVICE}stopReader`, {
+      method: 'GET'
+    });
+    console.log("resss", res)
+  }
 
   return (
     <main className="fullContainer">
@@ -93,11 +72,11 @@ export default function EventSelect() {
       </div>
       <div className="btnDivsHome">
         <button
-          onClick={() => setisReading(true)}
+          onClick={() => { start(); setisReading(true) }}
           disabled={isReading == true}
           className={isReading == false ? "btnGreen cardSelectBtn" : "btnDisabled cardSelectBtn"}>{isReading == false && <img src="/icons/play-circle-black.svg"></img>}{isReading == false ? `START READING` : <Loading></Loading>}</button>
         <button
-          onClick={() => setisReading(false)}
+          onClick={() => { stop(); setisReading(false) }}
           disabled={isReading == false}
           className={isReading == true ? "btnRed cardSelectBtn" : "btnDisabled cardSelectBtn"}>{isReading == true && <img src="/icons/stop-circle-white.svg"></img>}STOP READING</button>
       </div>

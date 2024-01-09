@@ -1,22 +1,21 @@
 'use client'
 
-import { useState, useEffect } from "react";
-import { useRouter, usePathname } from "next/navigation";
-
+import { useState, useEffect, useContext } from "react";
+import { usePathname } from "next/navigation";
+import { GlobalContext } from "@/context/global"
 
 export default function CardInfoData() {
+    const { config } = useContext(GlobalContext)
     const path = usePathname();
     const [read, setRead] = useState();
     const [cloud, setCloud] = useState();
 
-    function getConfig() {
-        setRead(localStorage.getItem("totalReader"))
-        setCloud(localStorage.getItem("totalCloud"))
-    }
+
 
     useEffect(() => {
-        getConfig()
-    }, [path])
+        setRead(config.totalReader)
+        setCloud(config.totalCloud)
+    }, [config])
 
     return (
         <div className="cardInfoContainer">

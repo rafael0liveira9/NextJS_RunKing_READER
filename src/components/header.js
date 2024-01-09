@@ -1,15 +1,21 @@
 'use client'
 import { useRouter, usePathname } from "next/navigation";
-import { useState, useEffect } from "react"
+import { useState, useEffect, useContext } from "react"
 import ConfirmModal from "@/components/modal/confirmation";
-
+import { GlobalContext } from "@/context/global"
 export default function Header() {
+    const { config } = useContext(GlobalContext)
+
     const path = usePathname();
     const router = useRouter();
-    const [systemHour, setSystemHour] = useState(null)
-    const [online, setOnline] = useState("")
+    const [systemHour, setSystemHour] = useState(config.dateTimeSystem)
+    const [online, setOnline] = useState(config.status)
+    const [cloud, setCloud] = useState(config.IS_SEND_TO_CLOUD)
     const [hour, setHour] = useState("")
-    const [ip, setIp] = useState("")
+    const [ip, setIp] = useState(config.ip)
+
+
+
     const [isModalGetHour, setIsModalGetHour] = useState(false)
 
     function getHour(x) {
@@ -23,6 +29,13 @@ export default function Header() {
         setSystemHour(formattedTime)
     }
 
+    useEffect(() => {
+        setSystemHour(config.dateTimeSystem)
+        setOnline(config.status)
+        setCloud(config.IS_SEND_TO_CLOUD)
+        setIp(config.ip)
+    }, [config])
+
     function isoConvert(dataString) {
         const data = new Date(dataString);
         return data.toISOString();
@@ -32,12 +45,6 @@ export default function Header() {
         const data = new Date(dataString);
         data.setSeconds(data.getSeconds() + 1);
         return data.toISOString();
-    }
-
-    function getConfig() {
-        setOnline(localStorage.getItem("IS_SEND_TO_CLOUD"))
-        setHour(localStorage.getItem("dateTimeSystem"))
-        setIp(localStorage.getItem("ip"))
     }
 
     function confirmModalClose() {
@@ -53,35 +60,6 @@ export default function Header() {
         setIsModalGetHour(false)
     }
 
-    useEffect(() => {
-        getConfig();
-
-        // let x = new Date();
-        // let y = isoConvert(x);
-        // setTimeout(() => {
-        //     console.log("aaaaaaaaa", y.substring(0, y.length - 5) != hour.substring(0, hour.length - 5))
-        //     if (y.substring(0, y.length - 5) != hour.substring(0, hour.length - 5)) {
-        //         setIsModalGetHour(true);
-        //     }
-        // }, [3000])
-
-    }, [path])
-
-    useEffect(() => {
-        const intervalId = setInterval(() => {
-
-            setOnline(localStorage.getItem("IS_SEND_TO_CLOUD"))
-            setHour(localStorage.getItem("dateTimeSystem"))
-            setIp(localStorage.getItem("ip"))
-
-            localStorage.setItem("dateTimeSystem", addSecond(localStorage.getItem("dateTimeSystem")));
-            setHour(addSecond(localStorage.getItem("dateTimeSystem")))
-            getHour(addSecond(localStorage.getItem("dateTimeSystem")))
-
-        }, 1000);
-        return () => clearInterval(intervalId);
-
-    }, [hour])
 
     return (
         <div className="greyBackground" style={{ flexDirection: "column", padding: "10px 0", Height: "25vh" }}>
@@ -93,15 +71,15 @@ export default function Header() {
                     <div className="headerContent responsiveHeaderDiv" style={{ flexDirection: "row", gap: "10px" }}>
                         <div className="headerContentRespOne" style={{ gap: "10px" }}>
                             Nuvem:
-                            <div className="iconGreenOut" style={online == "Lendo" ? { backgroundColor: "var(--green-dark)" } : online == "Parado" ? { backgroundColor: "var(--yellow-dark)" } : { backgroundColor: "var(--red-dark)" }}>
+                            <div className="iconGreenOut" style={cloud ? { backgroundColor: "var(--green-dark)" } : { backgroundColor: "var(--red-dark)" }}>
                                 <div
                                     className="iconGreenin"
-                                    style={online == "Lendo" ? { backgroundColor: "var(--green-primary)" } : online == "Parado" ? { backgroundColor: "var(--yellow-primary)" } : { backgroundColor: "var(--red-primary)" }}
+                                    style={cloud ? { backgroundColor: "var(--green-primary)" } : { backgroundColor: "var(--red-primary)" }}
                                 >
 
                                 </div>
                             </div>
-                            <span>{online == "true" ? "Online" : "Offline"}</span>
+                            <span>{cloud ? "Online" : "Offline"}</span>
                         </div>
                         <div className="headerContentRespTwo" style={{ gap: "10px" }}>
                             Reader IP: <span>{!!ip ? ip : " - "}</span>
@@ -120,7 +98,7 @@ export default function Header() {
 
                             </div>
                         </div>
-                        <span>{online == "true" ? "Online" : "Offline"}</span>
+                        <span>{online}</span>
                     </div>
                     <div className="headerContentRespTwo" style={{ gap: "10px" }}>
                         System Timetable: <span>{systemHour != null ? systemHour : " - "}</span>

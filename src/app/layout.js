@@ -1,5 +1,5 @@
 import '@/styles/global.css'
-
+import { GlobalProvider } from "../context/global"
 export const metadata = {
   title: 'RunKing App',
   description: 'This is a RunKing App Page.',
@@ -7,8 +7,10 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="pt-br">
-      <body>{children}</body>
-    </html>
+    <GlobalProvider>
+      <html lang="pt-br">
+        <body>{children}</body>
+      </html>
+    </GlobalProvider>
   )
 }
