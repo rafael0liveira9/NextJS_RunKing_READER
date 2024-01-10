@@ -34,10 +34,16 @@ export const GlobalProvider = ({ children }) => {
             localStorage.setItem("ip", jsonData.ip);
             localStorage.setItem("totalReader", jsonData.totalReader);
             localStorage.setItem("totalCloud", jsonData.totalCloud);
+            if (!isReading) {
+                if (jsonData.status == "Lendo") {
+                    setisReading(true)
+                }
+            }
             setTimeout(() => { getConfig() }, 1000)
 
         } catch (error) {
             console.error("Erro na requisição:", error);
+            setTimeout(() => { getConfig() }, 10000)
         }
     }
 

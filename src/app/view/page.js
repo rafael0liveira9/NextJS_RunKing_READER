@@ -53,6 +53,13 @@ export default function View() {
 
   }
 
+  const deleteFile = async (fileName) => {
+    await fetch(`${URLLOCALSERVICE}files/${fileName}`, {
+      method: 'DELETE'
+    });
+    loadData()
+  }
+
   useEffect(() => {
     loadData()
   }, [path])
@@ -77,7 +84,7 @@ export default function View() {
                     <h6>{e.tamanho_kb}kb</h6>
                     <div className="archievListIcon">
                       <img onClick={() => { downloadFile(e.nome) }} src="/icons/download.svg" />
-                      <img src="/icons/trash.svg" />
+                      <img onClick={() => { deleteFile(e.nome) }} src="/icons/trash.svg" />
                     </div>
                   </div>
                   {(y + 1) != filesData?.length && <Separator color={"var(--grey-neutral-nine)"} width={"100%"} height={"1px"}></Separator>}

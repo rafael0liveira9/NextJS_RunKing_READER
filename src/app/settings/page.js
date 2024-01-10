@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useContext } from "react"
 import { useRouter, usePathname } from "next/navigation";
 import Loading from "@/components/loading";
 
@@ -10,7 +10,7 @@ import FloatMenu from "@/components/floatMenu";
 import Separator from "@/components/separator";
 import CardSelectClockDate from "@/components/cards/dateCalendar";
 import ConfirmModal from "@/components/modal/confirmation";
-
+import { GlobalContext } from "@/context/global"
 
 
 export default function Settings() {
@@ -19,37 +19,50 @@ export default function Settings() {
   const [isLoading, setIsLoading] = useState(false)
   const [ip, setIp] = useState();
   const [isModalGetHour, setIsModalGetHour] = useState(false)
+  const { URLLOCALSERVICE } = useContext(GlobalContext)
 
-  const URL_API_RUNKING = "https://api.runking.com.br/"
 
   function getSettings() {
     setIp(localStorage.getItem("ip"))
   }
 
 
-  function saveIp() {
-
-    localStorage.setItem("ip", ip);
-
+  async function saveIp() {
     setIsLoading(true)
-
-    setTimeout(() => {
-      setIsLoading(false)
-    }, 1000);
+    const res = await fetch(`${URLLOCALSERVICE}configuration`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        "ip": ip
+      })
+    });
+    localStorage.setItem("ip", ip);
+    setIsLoading(false)
   }
 
   function isoConvert(dataString) {
     const data = new Date(dataString);
-    return data.toISOString();
+    // Ajusta o fuso horário para -3 horas
+    data.setHours(data.getHours() - 3);
+    return data.toISOString().replace(/\.\d{3}Z$/, 'Z');
   }
 
-  function saveNewDate() {
+  async function saveNewDate() {
     let x = new Date();
     let y = isoConvert(x);
     console.log(y)
-
+    await fetch(`${URLLOCALSERVICE}configuration`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        "systemTime": y
+      })
+    });
     localStorage.setItem("dateTimeSystem", y);
-
     setIsModalGetHour(false)
   }
 

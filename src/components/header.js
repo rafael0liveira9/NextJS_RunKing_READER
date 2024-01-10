@@ -70,7 +70,7 @@ export default function Header() {
                 <div className="headerContent">
                     <div className="headerContent responsiveHeaderDiv" style={{ flexDirection: "row", gap: "10px" }}>
                         <div className="headerContentRespOne" style={{ gap: "10px" }}>
-                            Nuvem:
+                            Cloud:
                             <div className="iconGreenOut" style={cloud ? { backgroundColor: "var(--green-dark)" } : { backgroundColor: "var(--red-dark)" }}>
                                 <div
                                     className="iconGreenin"
