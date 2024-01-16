@@ -9,14 +9,16 @@ import FloatMenu from "@/components/floatMenu";
 import Loading from "@/components/loading";
 import Separator from "@/components/separator";
 import { GlobalContext } from "@/context/global"
+import ConfirmModal from "@/components/modal/confirmation";
 
 export default function View() {
 
   const path = usePathname();
   const { URLLOCALSERVICE } = useContext(GlobalContext)
-
+  const [stopRModal, setStopRModal] = useState(false);
   const [isLoading, setIsLoading] = useState(false)
   const [filesData, setFilesData] = useState([])
+  const [dataSelected, setDataSelected] = useState()
 
   const loadData = async () => {
     const res = await fetch(`${URLLOCALSERVICE}files`, {
@@ -64,9 +66,26 @@ export default function View() {
     loadData()
   }, [path])
 
+  function deleteData() {
+    deleteFile(!!dataSelected ? dataSelected : "");
+    setStopRModal(false);
+  }
+
+  // const testFile = [
+  //   {
+  //     nome: "aa",
+  //     tamanho_kb: 11111
+  //   },
+  //   {
+  //     nome: "aa",
+  //     tamanho_kb: 11111
+  //   }
+  // ]
+
   return (
     <main className="fullContainer">
       <Header title={"Visualizar Resultado"}></Header>
+      {stopRModal == true && <ConfirmModal confirm={() => deleteData()} cancel={() => setStopRModal(false)} question={"Deseja realmente Deletar estes dados"} ></ConfirmModal>}
       <div className="mainView">
         <div className="archievListFirst">
           <h6>Filename</h6>
@@ -84,7 +103,7 @@ export default function View() {
                     <h6>{e.tamanho_kb}kb</h6>
                     <div className="archievListIcon">
                       <img onClick={() => { downloadFile(e.nome) }} src="/icons/download.svg" />
-                      <img onClick={() => { deleteFile(e.nome) }} src="/icons/trash.svg" />
+                      <img onClick={() => { setDataSelected(e.nome); setStopRModal(true); }} src="/icons/trash.svg" />
                     </div>
                   </div>
                   {(y + 1) != filesData?.length && <Separator color={"var(--grey-neutral-nine)"} width={"100%"} height={"1px"}></Separator>}

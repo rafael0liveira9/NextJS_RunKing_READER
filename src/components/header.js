@@ -8,13 +8,11 @@ export default function Header() {
 
     const path = usePathname();
     const router = useRouter();
-    const [systemHour, setSystemHour] = useState(config.dateTimeSystem)
+    const [systemHour, setSystemHour] = useState("-")
     const [online, setOnline] = useState(config.status)
     const [cloud, setCloud] = useState(config.IS_SEND_TO_CLOUD)
     const [hour, setHour] = useState("")
     const [ip, setIp] = useState(config.ip)
-
-
 
     const [isModalGetHour, setIsModalGetHour] = useState(false)
 
@@ -41,12 +39,6 @@ export default function Header() {
         return data.toISOString();
     }
 
-    function addSecond(dataString) {
-        const data = new Date(dataString);
-        data.setSeconds(data.getSeconds() + 1);
-        return data.toISOString();
-    }
-
     function confirmModalClose() {
         setIsModalGetHour(false)
     }
@@ -59,6 +51,19 @@ export default function Header() {
 
         setIsModalGetHour(false)
     }
+
+    function convertHour(x) {
+
+        let dataObj = new Date(x);
+
+        let dataFormatada = `${("0" + dataObj.getUTCDate()).slice(-2)}/${("0" + (dataObj.getUTCMonth() + 1)).slice(-2)}/${dataObj.getUTCFullYear()} - ${("0" + dataObj.getUTCHours()).slice(-2)}:${("0" + dataObj.getUTCMinutes()).slice(-2)}`;
+        // let dataFormatada = `${("0" + dataObj.getUTCDate()).slice(-2)}/${("0" + (dataObj.getUTCMonth() + 1)).slice(-2)}/${dataObj.getUTCFullYear()} - ${("0" + dataObj.getUTCHours()).slice(-2)}:${("0" + dataObj.getUTCMinutes()).slice(-2)}:${("0" + dataObj.getUTCSeconds()).slice(-2)}.${("00" + dataObj.getUTCMilliseconds()).slice(-3)}`;
+        setSystemHour(dataFormatada)
+    }
+
+    useEffect(() => {
+        convertHour(config.dateTimeSystem)
+    }, [config.dateTimeSystem])
 
 
     return (
