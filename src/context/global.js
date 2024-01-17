@@ -18,38 +18,37 @@ export const GlobalProvider = ({ children }) => {
 
     const [isReading, setisReading] = useState(false)
 
-    async function getConfig() {
-        try {
-            console.log("Antes da requisição fetch");
-            const response = await fetch(`${URLLOCALSERVICE}getRealTimeData`, {
-                method: 'GET'
-            });
+    // async function getConfig() {
+    //     try {
+    //         const response = await fetch(`${URLLOCALSERVICE}getRealTimeData`, {
+    //             method: 'GET'
+    //         });
 
-            const jsonData = await response.json();
-            setConfig(jsonData)
-            localStorage.setItem("IS_SEND_TO_CLOUD", jsonData.IS_SEND_TO_CLOUD);
-            localStorage.setItem("dateTimeSystem", jsonData.dateTimeSystem);
-            localStorage.setItem("serialNumber", "37022435146");
-            localStorage.setItem("status", jsonData.status);
-            localStorage.setItem("ip", jsonData.ip);
-            localStorage.setItem("totalReader", jsonData.totalReader);
-            localStorage.setItem("totalCloud", jsonData.totalCloud);
-            if (!isReading) {
-                if (jsonData.status == "Lendo") {
-                    setisReading(true)
-                }
-            }
-            setTimeout(() => { getConfig() }, 1000)
+    //         const jsonData = await response.json();
+    //         setConfig(jsonData)
+    //         localStorage.setItem("IS_SEND_TO_CLOUD", jsonData.IS_SEND_TO_CLOUD);
+    //         localStorage.setItem("dateTimeSystem", jsonData.dateTimeSystem);
+    //         localStorage.setItem("serialNumber", "37022435146");
+    //         localStorage.setItem("status", jsonData.status);
+    //         localStorage.setItem("ip", jsonData.ip);
+    //         localStorage.setItem("totalReader", jsonData.totalReader);
+    //         localStorage.setItem("totalCloud", jsonData.totalCloud);
+    //         if (!isReading) {
+    //             if (jsonData.status == "Lendo") {
+    //                 setisReading(true)
+    //             }
+    //         }
+    //         setTimeout(() => { getConfig() }, 1000)
 
-        } catch (error) {
-            console.error("Erro na requisição:", error);
-            setTimeout(() => { getConfig() }, 10000)
-        }
-    }
+    //     } catch (error) {
+    //         console.error("Erro na requisição:", error);
+    //         setTimeout(() => { getConfig() }, 10000)
+    //     }
+    // }
 
-    useEffect(() => {
-        getConfig()
-    }, [])
+    // useEffect(() => {
+    //     getConfig()
+    // }, [])
 
     return (
         <GlobalContext.Provider value={{

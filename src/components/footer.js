@@ -2,7 +2,7 @@
 
 
 
-export default function Footer({ menu }) {
+export default function Footer() {
     const year = new Date().getFullYear();
 
     return (

@@ -1,175 +1,113 @@
 'use client'
 
-import { useState, useEffect } from "react"
-import { useRouter } from "next/navigation";
-import Loading from "@/components/loading";
 import Header from "@/components/header";
 import Footer from "@/components/footer";
-import ConfirmModal from "@/components/modal/confirmation";
+import ProfileContent from "@/components/profileContent";
+import Separator from "@/components/separator";
+import TakePicture from "@/components/takePicture";
+import ModalTakePic from "@/components/modalTakePic";
+import Loading from "@/components/loading";
+
+import { useState, useEffect } from "react"
+import { useRouter, useParams, usePathname, useSearchParams } from "next/navigation";
+
 
 export default function Login() {
-  const router = useRouter();
-  const [userName, setUsername] = useState();
-  const [userPassword, setPassword] = useState();
-  const [mask, setMask] = useState(true);
-  const [user, setUser] = useState({});
-  const [dataError, setDataError] = useState(false);
-  const [conectionError, setConectionError] = useState(false);
-  const [modalConection, setModalConection] = useState(false);
+  const searchParams = useSearchParams();
+  const [image, setImage] = useState("")
+  const [capturedImage, setCapturedImage] = useState(null);
+  const [modalCapture, setModalCapture] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [userData, setUserData] = useState();
+  const [connectionError, setConnectionError] = useState(false);
+  const [userError, setUserError] = useState(false);
 
-  const URL_API_RUNKING = "https://api.runking.com.br/"
+  const USER_UUID = searchParams.get("uuid");
+  const URL_API = "https://api.runking.com.br/"
 
-
-  useEffect(() => {
-
-    alreadyLogin()
-
-  }, [userName, userPassword])
-
-  function saveSettings() {
-    setIsLoading(true)
-
-    localStorage.setItem("event_raia_one", true);
-    localStorage.setItem("event_raia_two", true);
-    localStorage.setItem("event_raia_tree", true);
-
-    setTimeout(() => {
-      setIsLoading(false)
-    }, 1000);
-
-    router.push("/home");
-  }
-
-
-  // ******************
-
-  //   user: 'admin@admin.com.br',
-  //   password: 'runking2023!@',
-
-  // *******************
-  async function signIn() {
-    setIsLoading(true);
+  const getUserData = async () => {
+    setConnectionError(false);
+    setUserError(false);
 
     try {
-      const response = await fetch(`${URL_API_RUNKING}login`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          user: userName,
-          password: userPassword
-        }),
-      });
+      const response = await fetch(`${URL_API}checkinCallChamber/${USER_UUID}`);
 
-      const data = await response.json();
+      if (response.ok) {
+        const data = await response.json();
 
-      if (response.status >= 205) {
-
-        console.log(response.status != 200)
-
-        if (response.status > 500) {
-          setModalConection(true)
-          setDataError(false)
-          setConectionError(true)
-        } else {
-          setConectionError(false)
-          setDataError(true)
-        }
-
-        throw new Error(`Erro na requisição: ${response.status} - ${response.statusText}`);
+        setUserData(data);
+        localStorage.setItem("user_name", data?.name);
+        localStorage.setItem("user_number", data?.number);
+        localStorage.setItem("event_name", data?.number);
+      } else if (response.status >= 500) {
+        setConnectionError(true);
       } else {
-
-        localStorage.setItem("user_id", data.id);
-        localStorage.setItem("user_name", data.name);
-        localStorage.setItem("user_email", data.email);
-        localStorage.setItem("user_phone", data.phone || "Não Preenchido");
-        localStorage.setItem("user_jwt", data.jwt);
-
-        setConectionError(false)
-        setDataError(false)
-        setIsLoading(false);
-        router.push("/select")
+        setUserError(true);
       }
-
     } catch (error) {
-      console.error("Erro na requisição:", error.message);
+      console.error("Error:", error);
+      setUserError(true);
+    }
+  };
+
+  const handleCapture = (imageSrc) => {
+    setModalCapture(true)
+    setCapturedImage(imageSrc);
+  };
+
+
+  const signOut = () => {
+    setIsLoading(true);
+    setTimeout(() => {
+      localStorage.clear("user_image")
+      setImage("")
       setIsLoading(false);
-    }
-  }
+    }, 1000)
+  };
 
+  const closeAndSave = () => {
+    setTimeout(() => {
+      setImage(localStorage.getItem("user_image"))
+      setModalCapture(false)
+      setIsLoading(false);
+    }, 1000)
+  };
 
-  function alreadyLogin() {
-    const user = {
-      id: localStorage.getItem("user_id") || "",
-      name: localStorage.getItem("user_name") || "",
-      email: localStorage.getItem("user_email") || "",
-      jwt: localStorage.getItem("user_jwt") || "",
-    };
-
-    setUser(user)
-
-    if (user.id != "") {
-      router.push("/select")
-    }
-
-  }
+  useEffect(() => {
+    setImage(localStorage.getItem("user_image"))
+    getUserData();
+  }, [])
 
 
   return (
     <main className="fullContainer">
+      {modalCapture == true && <ModalTakePic close={() => closeAndSave()} uuid={USER_UUID}></ModalTakePic>}
       <Header title="Login"></Header>
-      {modalConection == true && <ConfirmModal confirm={() => router.push("/home")} cancel={() => setModalConection(false)} question={"Erro ao conectar-se a rede, deseja prosseguir sem internet"}></ConfirmModal>}
-      <div className="mainContainer" style={{ width: "100%", maxWidth: "800px" }}>
-        <div className="mainContainer gap-4" style={{ alignItems: "end" }}>
-          <div className="w-full mb-5 flex justify-center">
-            <img src="/images/logo-runking.svg"></img>
-          </div>
-          <div className="inputText" style={{ width: "100%" }}>
-            <input
-              type="text"
-              placeholder="Digite seu e-mail..."
-              style={{ width: "100%" }}
-              value={userName}
-              onChange={(e) => setUsername(e.target.value)}
-            ></input>
-            <img src="/icons/user.svg"></img>
-          </div>
-
-
-          <div className="inputText" style={{ width: "100%" }}>
-            <input
-              type={mask == true ? "password" : "text"}
-              placeholder="Digite sua senha..."
-              style={{ width: "100%" }}
-              value={userPassword}
-              onChange={(e) => setPassword(e.target.value)}
-            >
-            </input>
-            <img
-              src={mask == true ? "/icons/lock.svg" : "/icons/lock-open.svg"}
-              onClick={() => setMask(!mask)}
-            ></img>
-          </div>
-          {dataError === true && <p className="errorInput"> * O e-mail ou Senha digitados não são validos.</p>}
-          {conectionError === true && <p className="errorInput"> * Erro de conexão, conecte-se a uma rede para Logar.</p>}
-          <button
-            className='btnGreen'
-            style={{ width: "100%" }}
-            onClick={() => signIn()}
-            disabled={isLoading}
-          >{isLoading === true ? <Loading></Loading> : "LOGIN"}</button>
-
-          <button
-            className='btnDisabled'
-            style={{ marginTop: "10%" }}
-            disabled={isLoading}
-            onClick={() => saveSettings()}
-          >{isLoading === true ? <Loading></Loading> : "CONTINUAR SEM LOGAR"}</button>
+      <div className="homeContent">
+        <div className="userContent">
+          <ProfileContent
+            status={!!connectionError ? 3 : !!userError ? 2 : 1}
+            name={!!userData?.name ? userData?.name : "-"}
+            number={!!userData?.number ? userData?.number : "-"}
+            auth={!!image ? 1 : 0}
+          ></ProfileContent>
+          <TakePicture
+            status={!!image ? true : false}
+            img={image}></TakePicture>
         </div>
+        {!image ?
+          <button
+
+            onClick={() => handleCapture()}
+            className="btnGreen profileBtn">{isLoading == true ? <Loading></Loading> : "Tirar Foto"}</button>
+          :
+          <button
+
+            onClick={() => signOut()}
+            className="btnRed profileBtn">{isLoading == true ? <Loading></Loading> : "Deslogar"}</button>
+        }
       </div>
-      <Footer menu={false}></Footer>
-    </main>
+      <Footer></Footer>
+    </main >
   )
 }
