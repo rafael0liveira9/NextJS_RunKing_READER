@@ -56,7 +56,7 @@ export default function Header() {
 
         let dataObj = new Date(x);
 
-        let dataFormatada = `${("0" + dataObj.getUTCDate()).slice(-2)}/${("0" + (dataObj.getUTCMonth() + 1)).slice(-2)}/${dataObj.getUTCFullYear()} - ${("0" + dataObj.getUTCHours()).slice(-2)}:${("0" + dataObj.getUTCMinutes()).slice(-2)}`;
+        let dataFormatada = `${("0" + dataObj.getUTCDate()).slice(-2)}/${("0" + (dataObj.getUTCMonth() + 1)).slice(-2)}/${dataObj.getUTCFullYear()} - ${("0" + dataObj.getUTCHours()).slice(-2)}:${("0" + dataObj.getUTCMinutes()).slice(-2)}:${("0" + dataObj.getUTCSeconds()).slice(-2)}`;
         // let dataFormatada = `${("0" + dataObj.getUTCDate()).slice(-2)}/${("0" + (dataObj.getUTCMonth() + 1)).slice(-2)}/${dataObj.getUTCFullYear()} - ${("0" + dataObj.getUTCHours()).slice(-2)}:${("0" + dataObj.getUTCMinutes()).slice(-2)}:${("0" + dataObj.getUTCSeconds()).slice(-2)}.${("00" + dataObj.getUTCMilliseconds()).slice(-3)}`;
         setSystemHour(dataFormatada)
     }
@@ -106,7 +106,7 @@ export default function Header() {
                         <span>{online}</span>
                     </div>
                     <div className="headerContentRespTwo" style={{ gap: "10px" }}>
-                        System Timetable: <span>{systemHour != null ? systemHour : " - "}</span>
+                        Horário: <span>{systemHour != null ? systemHour : " - "}</span>
                     </div>
                 </div>
             </div>

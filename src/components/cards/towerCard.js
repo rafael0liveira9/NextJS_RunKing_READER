@@ -14,8 +14,7 @@ export default function TowerCard({ status, tower }) {
 
                 </div>
             </div>
-            Torre {tower}
-            <span>{status == 1 ? "Online" : "Offline"}</span>
+            Antena {tower}
         </div>
     )
 }

@@ -1,13 +1,12 @@
 'use client'
 
 import { useState, useEffect, useContext } from "react"
-import { useRouter, usePathname } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { GlobalContext } from "@/context/global"
 import Header from "@/components/header";
 import Footer from "@/components/footer";
 import FloatMenu from "@/components/floatMenu";
 import CardInfoData from "@/components/cards/dataInfoCard";
-import CardSelectClockDate from "@/components/cards/dateCalendar";
 import Loading from "@/components/loading";
 import ConfirmModal from "@/components/modal/confirmation";
 import TowerCard from "@/components/cards/towerCard";
@@ -15,7 +14,7 @@ import TowerCard from "@/components/cards/towerCard";
 export default function EventSelect() {
 
   const path = usePathname();
-  const { setisReading, isReading } = useContext(GlobalContext);
+  const { setisReading, isReading, config } = useContext(GlobalContext);
   const [stopRModal, setStopRModal] = useState(false);
   const URLLOCALSERVICE = "http://localhost:8000/"
 
@@ -80,10 +79,10 @@ export default function EventSelect() {
       <div className="btnDateTimeHome">
         {/* <CardSelectClockDate></CardSelectClockDate> */}
         <div className="cardSelectClockDate" style={{ justifyContent: "space-between" }}>
-          <TowerCard status={1} tower={1}></TowerCard>
-          <TowerCard status={2} tower={2}></TowerCard>
-          <TowerCard status={1} tower={3}></TowerCard>
-          <TowerCard status={1} tower={4}></TowerCard>
+          <TowerCard status={config.antena1} tower={1}></TowerCard>
+          <TowerCard status={config.antena2} tower={2}></TowerCard>
+          <TowerCard status={config.antena3} tower={3}></TowerCard>
+          <TowerCard status={config.antena4} tower={4}></TowerCard>
         </div>
       </div>
       <div className="btnDivsHome">

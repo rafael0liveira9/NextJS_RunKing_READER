@@ -14,6 +14,10 @@ export const GlobalProvider = ({ children }) => {
         ip: "",
         totalReader: 0,
         totalCloud: 0,
+        antena1: 0,
+        antena2: 0,
+        antena3: 0,
+        antena4: 0,
     });
 
     const [isReading, setisReading] = useState(false)
