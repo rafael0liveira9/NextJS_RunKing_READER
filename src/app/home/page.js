@@ -78,7 +78,7 @@ export default function EventSelect() {
       <CardInfoData></CardInfoData>
       <div className="btnDateTimeHome">
         {/* <CardSelectClockDate></CardSelectClockDate> */}
-        <div className="cardSelectClockDate" style={{ justifyContent: "space-between" }}>
+        <div className="cardSelectClockDateHome">
           <TowerCard status={config.antena1} tower={1}></TowerCard>
           <TowerCard status={config.antena2} tower={2}></TowerCard>
           <TowerCard status={config.antena3} tower={3}></TowerCard>

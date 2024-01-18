@@ -469,6 +469,8 @@ textarea:focus {
   flex-direction: row;
   align-items: center;
   justify-content: center;
+  flex-wrap: nowrap;
+  white-space: nowrap;
 }
 .headerContentRespTwo {
   display: flex;
@@ -490,7 +492,7 @@ textarea:focus {
   }
   .headerContent span {
     margin-right: 5px 0;
-    font-size: 14px;
+    font-size: 12px;
   }
   .iconGreenin {
     margin: 0 3px;
@@ -1320,6 +1322,23 @@ textarea:focus {
   background-color: #3fe8be12;
   border-radius: 10px;
   text-align: center;
+  flex-wrap: wrap;
+}
+
+.cardSelectClockDateHome {
+  width: 100%;
+  height: auto;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  padding: 30px 15px;
+  border: 1px solid var(--green-primary);
+  background-color: #3fe8be12;
+  border-radius: 10px;
+  text-align: center;
+  flex-wrap: wrap;
+  gap: 50px;
 }
 
 .cardSelectInside {
