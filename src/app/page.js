@@ -1,11 +1,12 @@
 'use client'
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useContext } from "react"
 import { useRouter } from "next/navigation";
 import Loading from "@/components/loading";
 import Header from "@/components/header";
 import Footer from "@/components/footer";
 import ConfirmModal from "@/components/modal/confirmation";
+import { GlobalContext } from "@/context/global"
 
 export default function Login() {
   const router = useRouter();
@@ -17,7 +18,7 @@ export default function Login() {
   const [conectionError, setConectionError] = useState(false);
   const [modalConection, setModalConection] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-
+  const { URLLOCALSERVICE } = useContext(GlobalContext)
   const URL_API_RUNKING = "https://api.runking.com.br/"
 
 
@@ -27,16 +28,22 @@ export default function Login() {
 
   }, [userName, userPassword])
 
-  function saveSettings() {
+  async function saveSettings() {
     setIsLoading(true)
 
     localStorage.setItem("event_raia_one", true);
     localStorage.setItem("event_raia_two", true);
     localStorage.setItem("event_raia_tree", true);
+    await fetch(`${URLLOCALSERVICE}configuration`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        "PC": ""
+      })
+    });
 
-    setTimeout(() => {
-      setIsLoading(false)
-    }, 1000);
 
     router.push("/home");
   }
