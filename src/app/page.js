@@ -118,7 +118,7 @@ export default function Login() {
     setUser(user)
 
     if (user.id != "") {
-      router.push("/select")
+      router.push("/home")
     }
 
   }
