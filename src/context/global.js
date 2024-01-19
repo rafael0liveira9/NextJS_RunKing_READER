@@ -1,10 +1,9 @@
 'use client'
 import React, { createContext, useEffect, useState } from 'react';
-
 export const GlobalContext = createContext();
 
 export const GlobalProvider = ({ children }) => {
-    const URLLOCALSERVICE = "http://localhost:8000/"
+    const [URLLOCALSERVICE, setURLLOCALSERVICE] = useState("http://localhost:8000/")
 
     const [config, setConfig] = useState({
         IS_SEND_TO_CLOUD: false,
@@ -54,6 +53,14 @@ export const GlobalProvider = ({ children }) => {
     useEffect(() => {
         getConfig()
     }, [])
+
+    useEffect(() => {
+        setURLLOCALSERVICE(`${window.location.origin.replace(/(?::\d+)?$/, '')}:8000/`)
+    }, [])
+
+    useEffect(() => {
+        alert(URLLOCALSERVICE)
+    }, [URLLOCALSERVICE])
 
     return (
         <GlobalContext.Provider value={{

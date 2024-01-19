@@ -1,15 +1,16 @@
 'use client'
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useContext } from "react"
 import { useRouter } from "next/navigation";
+import { GlobalContext } from "@/context/global"
 
 export default function ControlPointModal({ close, event }) {
     const router = useRouter()
     const [cps, setCps] = useState()
 
     const URL_API_RUNKING = "https://api.runking.com.br/"
+    const { URLLOCALSERVICE } = useContext(GlobalContext);
 
-    const URLLOCALSERVICE = "http://localhost:8000/"
 
     const handleInnerDivClick = (e) => {
         e.stopPropagation();
