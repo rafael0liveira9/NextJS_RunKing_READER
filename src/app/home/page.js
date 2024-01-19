@@ -14,9 +14,9 @@ import TowerCard from "@/components/cards/towerCard";
 export default function EventSelect() {
 
   const path = usePathname();
-  const { setisReading, isReading, config } = useContext(GlobalContext);
+  const { setisReading, isReading, config, URLLOCALSERVICE } = useContext(GlobalContext);
   const [stopRModal, setStopRModal] = useState(false);
-  const URLLOCALSERVICE = "http://localhost:8000/"
+
 
   function alreadyLogin() {
     const user = {
