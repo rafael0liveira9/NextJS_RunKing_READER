@@ -73,8 +73,26 @@ export default function View() {
     setStopRModal(false);
   }
 
+  async function enviarParaAPI(items) {
+    try {
+      const response = await fetch(`https://api-tempo-real.runking.com.br/insertDataMultiples/${pc.uuid}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(items)
+      });
+      const data = await response.json();
+      console.log('Resposta da API:', data);
+    } catch (error) {
+      console.error('Erro ao enviar para a API:', error);
+    }
+  }
+
+
   async function uploadData() {
     setIsLoading(true)
+    setUploadModal(false)
     console.log("dataSelected", dataSelected)
     const res = await fetch(`${URLLOCALSERVICE}files/${dataSelected}`, {
       method: 'GET'
@@ -99,60 +117,64 @@ export default function View() {
 
     // Saída como array de objetos
     console.log(objetos);
+
+    const batchSize = 50;
+    const totalBatches = Math.ceil(objetos.length / batchSize);
+
+    for (let i = 0; i < totalBatches; i++) {
+      const start = i * batchSize;
+      const end = (i + 1) * batchSize;
+      const batchObjetos = objetos.slice(start, end);
+
+      await enviarParaAPI(batchObjetos);
+    }
+
+
     setIsLoading(false)
 
   }
 
-  // const testFile = [
-  //   {
-  //     nome: "aa",
-  //     tamanho_kb: 11111
-  //   },
-  //   {
-  //     nome: "aa",
-  //     tamanho_kb: 11111
-  //   }
-  // ]
 
   return (
     <main className="fullContainer">
       <Header title={"Visualizar Resultado"}></Header>
       {stopRModal == true && <ConfirmModal confirm={() => deleteData()} cancel={() => setStopRModal(false)} question={"Deseja realmente Deletar estes dados"} ></ConfirmModal>}
       {uploadModal == true && <ConfirmModal confirm={() => uploadData()} cancel={() => setUploadModal(false)} question={"Deseja realmente enviar estes dados para nuvem runking"} ></ConfirmModal>}
-      <div className="mainView">
-        <div className="archievListFirst">
-          <h6>Arquivo</h6>
-          <h6>Tamanho</h6>
-          <h6>Ação</h6>
-        </div>
-        <div className="archievListSecond">
-          {filesData?.length > 0
-            ?
-            filesData.map((e, y) => {
-              return (
-                <>
-                  <div className="archievListItem" key={y}>
-                    <h6>{e.nome}</h6>
-                    <h6>{e.tamanho_kb}kb</h6>
-                    <div className="archievListIcon">
-                      <img onClick={() => { downloadFile(e.nome) }} src="/icons/download.svg" />
-                      {pc && <img onClick={() => { setDataSelected(e.nome); setUploadModal(true); }} src="/icons/cloud.svg" />}
-                      <img onClick={() => { setDataSelected(e.nome); setStopRModal(true); }} src="/icons/trash.svg" />
+      {isLoading ? <Loading /> :
+        (<div className="mainView">
+          <div className="archievListFirst">
+            <h6>Arquivo</h6>
+            <h6>Tamanho</h6>
+            <h6>Ação</h6>
+          </div>
+          <div className="archievListSecond">
+            {filesData?.length > 0
+              ?
+              filesData.map((e, y) => {
+                return (
+                  <>
+                    <div className="archievListItem" key={y}>
+                      <h6>{e.nome}</h6>
+                      <h6>{e.tamanho_kb}kb</h6>
+                      <div className="archievListIcon">
+                        <img onClick={() => { downloadFile(e.nome) }} src="/icons/download.svg" />
+                        {pc && <img onClick={() => { setDataSelected(e.nome); setUploadModal(true); }} src="/icons/cloud.svg" />}
+                        <img onClick={() => { setDataSelected(e.nome); setStopRModal(true); }} src="/icons/trash.svg" />
+                      </div>
                     </div>
-                  </div>
-                  {(y + 1) != filesData?.length && <Separator color={"var(--grey-neutral-nine)"} width={"100%"} height={"1px"}></Separator>}
-                </>
-              )
-            })
-            :
-            <div className="archievNoListAvaible">
-              <p>
-                - No files available
-              </p>
-            </div>
-          }
-        </div>
-      </div>
+                    {(y + 1) != filesData?.length && <Separator color={"var(--grey-neutral-nine)"} width={"100%"} height={"1px"}></Separator>}
+                  </>
+                )
+              })
+              :
+              <div className="archievNoListAvaible">
+                <p>
+                  - No files available
+                </p>
+              </div>
+            }
+          </div>
+        </div>)}
       <FloatMenu></FloatMenu>
       <Footer></Footer>
     </main >
