@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useContext } from "react"
 import { useRouter } from "next/navigation";
 
 import Header from "@/components/header";
@@ -10,7 +10,7 @@ import ConfirmModal from "@/components/modal/confirmation";
 import Loading from "@/components/loading";
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
-
+import { GlobalContext } from "@/context/global"
 
 export default function Profile() {
   const router = useRouter()
@@ -20,6 +20,7 @@ export default function Profile() {
   const [isLoading, setIsLoading] = useState(false)
   const type = event?.type?.replaceAll("_", " ").replaceAll("-", " ") || ``
   const eventDate = event.date ? new Date(event.date) : null;
+  const { setPCData, setLogin } = useContext(GlobalContext)
 
   let formattedDate = '';
   let formattedTime = '';
@@ -57,9 +58,12 @@ export default function Profile() {
     setIsLoading(true)
     setConfirmModalisOpen(false)
 
+
+    setPCData(null)
+    setLogin(null)
+
     localStorage.clear();
 
-    setUser("")
 
     setTimeout(() => {
       setIsLoading(false)

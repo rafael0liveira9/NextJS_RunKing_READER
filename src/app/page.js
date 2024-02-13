@@ -18,8 +18,8 @@ export default function Login() {
   const [conectionError, setConectionError] = useState(false);
   const [modalConection, setModalConection] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const { URLLOCALSERVICE } = useContext(GlobalContext)
-  const URL_API_RUNKING = "https://api.runking.com.br/"
+  const { URLLOCALSERVICE, URL_API_RUNKING, setLogin, dataLogin, pc, setPCData } = useContext(GlobalContext)
+
 
 
   useEffect(() => {
@@ -57,7 +57,6 @@ export default function Login() {
   // *******************
   async function signIn() {
     setIsLoading(true);
-
     try {
       const response = await fetch(`${URL_API_RUNKING}login`, {
         method: 'POST',
@@ -87,7 +86,7 @@ export default function Login() {
 
         throw new Error(`Erro na requisição: ${response.status} - ${response.statusText}`);
       } else {
-
+        setLogin(data)
         localStorage.setItem("user_id", data.id);
         localStorage.setItem("user_name", data.name);
         localStorage.setItem("user_email", data.email);
@@ -108,20 +107,25 @@ export default function Login() {
 
 
   function alreadyLogin() {
-    const user = {
-      id: localStorage.getItem("user_id") || "",
-      name: localStorage.getItem("user_name") || "",
-      email: localStorage.getItem("user_email") || "",
-      jwt: localStorage.getItem("user_jwt") || "",
-    };
 
-    setUser(user)
+    if (localStorage.getItem("AUTH") || null) {
+      setLogin(JSON.parse(localStorage.getItem("AUTH")))
 
-    if (user.id != "") {
-      router.push("/home")
+      if (localStorage.getItem("PC") || null) {
+        setPCData(JSON.parse(localStorage.getItem("PC")))
+      }
     }
 
   }
+
+  useEffect(() => {
+    if (dataLogin) {
+      if (!pc) {
+        router.push("/select")
+      } else
+        router.push("/home")
+    }
+  }, [dataLogin, pc])
 
 
   return (

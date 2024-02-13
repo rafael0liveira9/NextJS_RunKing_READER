@@ -8,8 +8,8 @@ export default function ControlPointModal({ close, event }) {
     const router = useRouter()
     const [cps, setCps] = useState()
 
-    const URL_API_RUNKING = "https://api.runking.com.br/"
-    const { URLLOCALSERVICE } = useContext(GlobalContext);
+
+    const { URLLOCALSERVICE, setPCData, URL_API_RUNKING } = useContext(GlobalContext);
 
 
     const handleInnerDivClick = (e) => {
@@ -48,6 +48,7 @@ export default function ControlPointModal({ close, event }) {
     }
 
     const postCPs = async function (pc) {
+        setPCData(pc)
         try {
 
             const res = await fetch(`${URLLOCALSERVICE}configuration`, {

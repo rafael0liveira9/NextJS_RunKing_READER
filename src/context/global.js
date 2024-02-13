@@ -19,11 +19,29 @@ export const GlobalProvider = ({ children }) => {
         antena4: 0,
     });
 
+    const [dataLogin, setDataLogin] = useState(null)
+    const [pc, setPC] = useState(null)
+
+    const setLogin = (data) => {
+        setDataLogin(data)
+        localStorage.setItem("AUTH", JSON.stringify(data))
+    }
+
+    const setPCData = (data) => {
+        setPC(data)
+        localStorage.setItem("PC", JSON.stringify(data))
+
+    }
+
+
     const URLLOCALSERVICE = () => {
         if (typeof window !== 'undefined') {
             return `${window.location.protocol}//${window.location.hostname}:8000/`;
         }
         return null;
+    }
+    const URLAPIRUNKING = () => {
+        return "https://api.runking.com.br/"
     }
 
 
@@ -61,9 +79,16 @@ export const GlobalProvider = ({ children }) => {
         }
     }
 
+    async function getLogin() {
+        setDataLogin(localStorage.getItem("AUTH", null))
+    }
+
     useEffect(() => {
         getConfig()
+        getLogin()
     }, [])
+
+
 
 
 
@@ -72,7 +97,12 @@ export const GlobalProvider = ({ children }) => {
             config,
             URLLOCALSERVICE: URLLOCALSERVICE(),
             isReading,
-            setisReading
+            setisReading,
+            dataLogin,
+            setLogin,
+            URL_API_RUNKING: URLAPIRUNKING(),
+            setPCData,
+            pc,
         }}>
             {children}
         </GlobalContext.Provider>

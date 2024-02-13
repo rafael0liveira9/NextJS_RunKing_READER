@@ -14,11 +14,13 @@ import ConfirmModal from "@/components/modal/confirmation";
 export default function View() {
 
   const path = usePathname();
-  const { URLLOCALSERVICE } = useContext(GlobalContext)
+  const { URLLOCALSERVICE, pc } = useContext(GlobalContext)
   const [stopRModal, setStopRModal] = useState(false);
   const [isLoading, setIsLoading] = useState(false)
   const [filesData, setFilesData] = useState([])
   const [dataSelected, setDataSelected] = useState()
+  const [uploadModal, setUploadModal] = useState()
+
 
   const loadData = async () => {
     const res = await fetch(`${URLLOCALSERVICE}files`, {
@@ -71,6 +73,36 @@ export default function View() {
     setStopRModal(false);
   }
 
+  async function uploadData() {
+    setIsLoading(true)
+    console.log("dataSelected", dataSelected)
+    const res = await fetch(`${URLLOCALSERVICE}files/${dataSelected}`, {
+      method: 'GET'
+    });
+    let dados_csv = (await res.text())
+
+    // Processamento dos dados
+    const linhas = dados_csv.trim().split('\n');
+    const objetos = [];
+
+    for (const linha of linhas) {
+      const [dataHoraStr, chip] = linha.split(';');
+      const [ano, mes, dia, hora, minuto, segundo, milissegundo] = dataHoraStr.match(/(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):(\d{2}).(\d{3})\d*Z/).slice(1);
+      const data = `${ano}-${mes}-${dia}`;
+      const horaFormatada = `${hora}h${minuto}'${segundo},${milissegundo}`;
+      objetos.push({
+        data: data,
+        hora: horaFormatada,
+        chip: chip
+      });
+    }
+
+    // Saída como array de objetos
+    console.log(objetos);
+    setIsLoading(false)
+
+  }
+
   // const testFile = [
   //   {
   //     nome: "aa",
@@ -86,11 +118,12 @@ export default function View() {
     <main className="fullContainer">
       <Header title={"Visualizar Resultado"}></Header>
       {stopRModal == true && <ConfirmModal confirm={() => deleteData()} cancel={() => setStopRModal(false)} question={"Deseja realmente Deletar estes dados"} ></ConfirmModal>}
+      {uploadModal == true && <ConfirmModal confirm={() => uploadData()} cancel={() => setUploadModal(false)} question={"Deseja realmente enviar estes dados para nuvem runking"} ></ConfirmModal>}
       <div className="mainView">
         <div className="archievListFirst">
-          <h6>Filename</h6>
-          <h6>Size</h6>
-          <h6>Action</h6>
+          <h6>Arquivo</h6>
+          <h6>Tamanho</h6>
+          <h6>Ação</h6>
         </div>
         <div className="archievListSecond">
           {filesData?.length > 0
@@ -103,6 +136,7 @@ export default function View() {
                     <h6>{e.tamanho_kb}kb</h6>
                     <div className="archievListIcon">
                       <img onClick={() => { downloadFile(e.nome) }} src="/icons/download.svg" />
+                      {pc && <img onClick={() => { setDataSelected(e.nome); setUploadModal(true); }} src="/icons/cloud.svg" />}
                       <img onClick={() => { setDataSelected(e.nome); setStopRModal(true); }} src="/icons/trash.svg" />
                     </div>
                   </div>
