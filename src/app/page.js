@@ -22,11 +22,7 @@ export default function Login() {
 
 
 
-  useEffect(() => {
 
-    alreadyLogin()
-
-  }, [userName, userPassword])
 
   async function saveSettings() {
     setIsLoading(true)
@@ -105,18 +101,6 @@ export default function Login() {
     }
   }
 
-
-  function alreadyLogin() {
-
-    if (localStorage.getItem("AUTH") || null) {
-      setLogin(JSON.parse(localStorage.getItem("AUTH")))
-
-      if (localStorage.getItem("PC") || null) {
-        setPCData(JSON.parse(localStorage.getItem("PC")))
-      }
-    }
-
-  }
 
   useEffect(() => {
     if (dataLogin) {

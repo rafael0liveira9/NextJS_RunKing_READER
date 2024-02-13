@@ -140,7 +140,7 @@ export default function View() {
       <Header title={"Visualizar Resultado"}></Header>
       {stopRModal == true && <ConfirmModal confirm={() => deleteData()} cancel={() => setStopRModal(false)} question={"Deseja realmente Deletar estes dados"} ></ConfirmModal>}
       {uploadModal == true && <ConfirmModal confirm={() => uploadData()} cancel={() => setUploadModal(false)} question={"Deseja realmente enviar estes dados para nuvem runking"} ></ConfirmModal>}
-      {isLoading ? <Loading /> :
+      {isLoading ? <Loading dark /> :
         (<div className="mainView">
           <div className="archievListFirst">
             <h6>Arquivo</h6>

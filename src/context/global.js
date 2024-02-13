@@ -79,13 +79,20 @@ export const GlobalProvider = ({ children }) => {
         }
     }
 
-    async function getLogin() {
-        setDataLogin(localStorage.getItem("AUTH", null))
+    function alreadyLogin() {
+        if (localStorage.getItem("AUTH") || null) {
+            setLogin(JSON.parse(localStorage.getItem("AUTH")))
+
+            if (localStorage.getItem("PC") || null) {
+                setPCData(JSON.parse(localStorage.getItem("PC")))
+            }
+        }
+
     }
 
     useEffect(() => {
         getConfig()
-        getLogin()
+        alreadyLogin()
     }, [])
 
 
