@@ -84,8 +84,10 @@ export default function View() {
       });
       const data = await response.json();
       console.log('Resposta da API:', data);
+      return true
     } catch (error) {
       console.error('Erro ao enviar para a API:', error);
+      return false
     }
   }
 
@@ -126,7 +128,10 @@ export default function View() {
       const end = (i + 1) * batchSize;
       const batchObjetos = objetos.slice(start, end);
 
-      await enviarParaAPI(batchObjetos);
+      if (!await enviarParaAPI(batchObjetos)) {
+        alert("Não foi possível enviar os dados para API")
+        break;
+      }
     }
 
 
