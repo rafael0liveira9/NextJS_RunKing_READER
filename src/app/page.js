@@ -26,21 +26,6 @@ export default function Login() {
 
   async function saveSettings() {
     setIsLoading(true)
-
-    localStorage.setItem("event_raia_one", true);
-    localStorage.setItem("event_raia_two", true);
-    localStorage.setItem("event_raia_tree", true);
-    await fetch(`${URLLOCALSERVICE}configuration`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        "PC": ""
-      })
-    });
-
-
     router.push("/home");
   }
 
