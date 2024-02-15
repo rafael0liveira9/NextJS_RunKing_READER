@@ -20,7 +20,7 @@ export default function Profile() {
   const [isLoading, setIsLoading] = useState(false)
   const type = event?.type?.replaceAll("_", " ").replaceAll("-", " ") || ``
   const eventDate = event.date ? new Date(event.date) : null;
-  const { setPCData, setLogin } = useContext(GlobalContext)
+  const { setPCData, setLogin, pc } = useContext(GlobalContext)
 
   let formattedDate = '';
   let formattedTime = '';
@@ -94,7 +94,7 @@ export default function Profile() {
             {user?.email != "" && <div className="infoItem"><h6>E-mail : </h6><p>{user.email}</p></div>}
             {user?.phone != "" && <div className="infoItem"><h6>Telefone : </h6><p>{user.phone}</p></div>}
             {event?.name != "" && <div className="infoItem"><h6>Evento : </h6><p>{event.name}</p></div>}
-            {event?.type != "" && <div className="infoItem"><h6>Tipo : </h6><p>{type}</p></div>}
+            {event?.type != "" && <div className="infoItem"><h6>Ponto de Controle: </h6><p>{pc.name}</p></div>}
             {event?.date != "" && <div className="infoItem"><h6>Data : </h6><p>{formattedDate + " às " + formattedTime}</p></div>}
           </div>
         </div>
