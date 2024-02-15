@@ -17,6 +17,7 @@ export const GlobalProvider = ({ children }) => {
         antena2: 0,
         antena3: 0,
         antena4: 0,
+        isInternet: false,
     });
 
     const [dataLogin, setDataLogin] = useState(null)

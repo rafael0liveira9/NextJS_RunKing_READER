@@ -71,6 +71,9 @@ export default function Header() {
             {isModalGetHour == true &&
                 <ConfirmModal confirm={() => confirmModal()} cancel={() => confirmModalClose()} question={"Deseja sincronizar a hora do sistema"}></ConfirmModal>}
             <img src="/images/logo-runking.png"></img>
+            <div style={{ position: "absolute", right: 10, top: 10, }}>
+                <img src={config.isInternet ? "/icons/internetOn.svg" : "/icons/internetOff.svg"}></img>
+            </div>
             <div className="headerContent">
                 <div className="headerContent">
                     <div className="headerContent responsiveHeaderDiv" style={{ flexDirection: "row", gap: "10px" }}>
