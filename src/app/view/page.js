@@ -144,12 +144,12 @@ export default function View() {
     <main className="fullContainer">
       <Header title={"Visualizar Resultado"}></Header>
       {stopRModal == true && <ConfirmModal confirm={() => deleteData()} cancel={() => setStopRModal(false)} question={"Deseja realmente Deletar estes dados"} ></ConfirmModal>}
-      {uploadModal == true && <ConfirmModal confirm={() => uploadData()} cancel={() => setUploadModal(false)} question={"Deseja realmente enviar estes dados para nuvem runking"} ></ConfirmModal>}
-      {isLoading ? <Loading dark /> :
+      {uploadModal == true && <ConfirmModal confirm={() => uploadData()} cancel={() => setUploadModal(false)} question={"Deseja realmente enviar estes dados para nuvem runking selecionada?"} ></ConfirmModal>}
+      {isLoading ? <Loading position="relative" /> :
         (<div className="mainView">
           <div className="archievListFirst">
             <h6>Arquivo</h6>
-            <h6>Tamanho</h6>
+            <h6>Total de Leituras</h6>
             <h6>Ação</h6>
           </div>
           <div className="archievListSecond">
@@ -160,7 +160,7 @@ export default function View() {
                   <>
                     <div className="archievListItem" key={y}>
                       <h6>{e.nome}</h6>
-                      <h6>{e.tamanho_kb}kb</h6>
+                      <h6>{e.linhas} linhas</h6>
                       <div className="archievListIcon">
                         <img onClick={() => { downloadFile(e.nome) }} src="/icons/download.svg" />
                         {pc && <img onClick={() => { setDataSelected(e.nome); setUploadModal(true); }} src="/icons/cloud.svg" />}

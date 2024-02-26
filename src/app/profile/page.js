@@ -92,9 +92,8 @@ export default function Profile() {
           <div className="infoProfile">
             {user?.name != "" && <div className="infoItem"><h6>Nome : </h6><p>{user.name}</p></div>}
             {user?.email != "" && <div className="infoItem"><h6>E-mail : </h6><p>{user.email}</p></div>}
-            {user?.phone != "" && <div className="infoItem"><h6>Telefone : </h6><p>{user.phone}</p></div>}
             {event?.name != "" && <div className="infoItem"><h6>Evento : </h6><p>{event.name}</p></div>}
-            {event?.type != "" && <div className="infoItem"><h6>Ponto de Controle: </h6><p>{pc?.name}</p></div>}
+            {event?.type != "" && <div className="infoItem"><h6>Ponto de Controle: </h6><p><a href={`https://api-tempo-real.runking.com.br/Data/${pc?.uuid}/csv`} target="_blank">{pc?.name}</a></p></div>}
             {event?.date != "" && <div className="infoItem"><h6>Data : </h6><p>{formattedDate + " às " + formattedTime}</p></div>}
           </div>
         </div>
@@ -102,7 +101,7 @@ export default function Profile() {
           <button className="btnBlue btnProfile"
             disabled={confirmModalisOpen == true ? true : false}
             onClick={() => router.push("/select")}
-          >{isLoading === true ? <Loading></Loading> : "+ Eventos"}</button>
+          >{isLoading === true ? <Loading></Loading> : "Trocar Evento"}</button>
           <button className="btnRed btnProfile"
             disabled={confirmModalisOpen == true ? true : false}
             onClick={() => confirmModalOpen()}
