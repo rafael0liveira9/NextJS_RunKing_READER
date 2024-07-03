@@ -9,6 +9,8 @@ import Footer from "@/components/footer";
 import FloatMenu from "@/components/floatMenu";
 import Separator from "@/components/separator";
 import CardSelectClockDate from "@/components/cards/dateCalendar";
+import CardselectWiFi from "@/components/cards/selectWiFi";
+
 import ConfirmModal from "@/components/modal/confirmation";
 import { GlobalContext } from "@/context/global"
 
@@ -20,10 +22,21 @@ export default function Settings() {
   const [ip, setIp] = useState();
   const [isModalGetHour, setIsModalGetHour] = useState(false)
   const { URLLOCALSERVICE } = useContext(GlobalContext)
+  const [networks, setNetworks] = useState([])
+  const [currentNetwork, setCurrentNetwork] = useState("")
 
-
-  function getSettings() {
+  async function getSettings() {
     setIp(localStorage.getItem("ip"))
+    const res = await fetch(`${URLLOCALSERVICE}configurationHardware`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
+    let js = await res.json()
+    setNetworks(js.available_networks)
+    if (js.connected_network)
+      setCurrentNetwork(js.connected_network)
   }
 
 
@@ -105,6 +118,16 @@ export default function Settings() {
           <CardSelectClockDate
             text={"Configurar baseado neste dispostivo​"}></CardSelectClockDate>
         </div>
+
+        <div
+          className="settingsDateTime">
+          <h5>Wi-fi</h5>
+          <CardselectWiFi
+            networks={networks}
+            currentNetwork={currentNetwork}
+            text={"Configurar baseado neste dispostivo​"}></CardselectWiFi>
+        </div>
+
       </div>
       <FloatMenu></FloatMenu>
       <Footer></Footer>
