@@ -4,7 +4,7 @@ import { useState, useContext } from "react";
 import ConectWifiModal from "../modal/conectWifiModal"
 import { GlobalContext } from "@/context/global"
 
-export default function CardselectWiFi({ networks, currentNetwork }) {
+export default function CardselectWiFi({ networks, currentNetwork, getSettings }) {
     const [password, setPassword] = useState("");
     const [modalVisible, setModalVisible] = useState(false);
     const [selectedNetwork, setSelectedNetwork] = useState(null);
@@ -36,6 +36,7 @@ export default function CardselectWiFi({ networks, currentNetwork }) {
         if (result.status) {
             setStatusConnection("")
             handleCancel()
+            getSettings()
         }
 
         setStatusConnection(`Falha ao conectar em ${selectedNetwork}...\n<br />${result.message}`)

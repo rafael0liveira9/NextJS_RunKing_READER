@@ -125,6 +125,7 @@ export default function Settings() {
           <CardselectWiFi
             networks={networks}
             currentNetwork={currentNetwork}
+            getSettings={getSettings}
             text={"Configurar baseado neste dispostivo​"}></CardselectWiFi>
         </div>
 
