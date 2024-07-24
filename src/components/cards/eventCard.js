@@ -2,12 +2,13 @@
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { useRouter } from "next/navigation";
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 import ControlPointModal from "@/components/modal/controlPoints";
-
+import { GlobalContext } from "@/context/global"
 
 export default function EventCard({ event, y }) {
     const router = useRouter()
+    const { setEvent } = useContext(GlobalContext)
     const index = y || 1
     const image = event?.logo || "/images/king-crow.png"
     const title = event?.name || `Event #${index}`
@@ -19,22 +20,8 @@ export default function EventCard({ event, y }) {
     function selectevent(event) {
 
         if (!!event?.id) {
-            localStorage.setItem("event_id", event.id);
-            localStorage.setItem("event_title", event.name);
-            localStorage.setItem("event_type", event.eventType);
-            localStorage.setItem("event_slug", event.slug);
-            localStorage.setItem("event_logo", event.logo);
-            localStorage.setItem("event_cep", event.cep);
-            localStorage.setItem("event_address", event.address);
-            localStorage.setItem("event_neighborhood", event.neighborhood);
-            localStorage.setItem("event_city", event.city);
-            localStorage.setItem("event_uf", event.uf);
-            localStorage.setItem("event_country", event.country);
-            localStorage.setItem("event_date", event.mainDate);
-            localStorage.setItem("event_raia_one", true);
-            localStorage.setItem("event_raia_two", true);
-            localStorage.setItem("event_raia_tree", true);
-
+            setEvent(event)
+            localStorage.setItem("event", JSON.stringify(event))
             openModalCP()
         }
     }

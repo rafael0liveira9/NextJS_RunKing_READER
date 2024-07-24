@@ -28,11 +28,15 @@ export default function EventSelect() {
   }, [])
 
   function alreadyLogin() {
+    let dataLog = JSON.parse(localStorage.getItem("login"))
+    if (!dataLog) {
+      router.push("/")
+      return;
+    }
+
     const user = {
-      id: localStorage.getItem("user_id") || "",
-      name: localStorage.getItem("user_name") || "",
-      email: localStorage.getItem("user_email") || "",
-      jwt: localStorage.getItem("user_jwt") || "",
+      id: dataLog.id,
+      jwt: dataLog.jwt
     };
 
     setUser(user)
@@ -46,14 +50,14 @@ export default function EventSelect() {
 
 
   async function getEvents() {
-
+    let dataLog = JSON.parse(localStorage.getItem("login"))
+    if (!dataLog)
+      return
     try {
-
-
       const response = await fetch(`${URL_API_RUNKING}eventsByLogin`, {
         method: 'GET',
         headers: {
-          'Authorization': localStorage.getItem("user_jwt")
+          'Authorization': dataLog.jwt
         }
       });
 

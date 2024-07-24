@@ -22,6 +22,27 @@ export const GlobalProvider = ({ children }) => {
 
     const [dataLogin, setDataLogin] = useState(null)
     const [pc, setPC] = useState(null)
+    const [event, setEvent] = useState(null)
+
+    const URLLOCALSERVICE = () => {
+        if (typeof window !== 'undefined') {
+            return `${window.location.protocol}//${window.location.hostname}:8000/`;
+        }
+        return null;
+    }
+
+    const saveLoginInHarware = async ({ login = null, event = null, currentPc = null, logout = false }) => {
+        await fetch(`${URLLOCALSERVICE()}configuration`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                "login": logout ? null : { dataLogin: login, pc: currentPc, event },
+                "PC": logout ? null : undefined,
+            })
+        });
+    }
 
     const setLogin = (data) => {
         setDataLogin(data)
@@ -35,12 +56,7 @@ export const GlobalProvider = ({ children }) => {
     }
 
 
-    const URLLOCALSERVICE = () => {
-        if (typeof window !== 'undefined') {
-            return `${window.location.protocol}//${window.location.hostname}:8000/`;
-        }
-        return null;
-    }
+
     const URLAPIRUNKING = () => {
         return "https://api.runking.com.br/"
     }
@@ -58,10 +74,30 @@ export const GlobalProvider = ({ children }) => {
                 });
 
                 const jsonData = await response.json();
+
+
                 setConfig(jsonData)
+                if (!jsonData.login) {
+                    setDataLogin(null)
+                    setPC(null)
+                    setEvent(null)
+                }
+
+                if (!dataLogin && jsonData.login && jsonData.login.dataLogin) {
+                    setDataLogin(jsonData.login.dataLogin)
+                }
+
+                if (!pc && jsonData.login && jsonData.login.pc) {
+                    setPC(jsonData.login.pc)
+                }
+
+                if (!event && jsonData.login && jsonData.login.event) {
+                    setEvent(jsonData.login.event)
+                }
+
                 localStorage.setItem("IS_SEND_TO_CLOUD", jsonData.IS_SEND_TO_CLOUD);
                 localStorage.setItem("dateTimeSystem", jsonData.dateTimeSystem);
-                localStorage.setItem("serialNumber", "37022435146");
+
                 localStorage.setItem("status", jsonData.status);
                 localStorage.setItem("ip", jsonData.ip);
                 localStorage.setItem("totalReader", jsonData.totalReader);
@@ -93,7 +129,7 @@ export const GlobalProvider = ({ children }) => {
 
     useEffect(() => {
         getConfig()
-        alreadyLogin()
+        // alreadyLogin()
     }, [])
 
 
@@ -111,6 +147,9 @@ export const GlobalProvider = ({ children }) => {
             URL_API_RUNKING: URLAPIRUNKING(),
             setPCData,
             pc,
+            event,
+            setEvent,
+            saveLoginInHarware,
         }}>
             {children}
         </GlobalContext.Provider>

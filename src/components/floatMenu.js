@@ -1,28 +1,28 @@
 'use client'
 import { useRouter, usePathname } from "next/navigation";
-import { useState, useEffect } from "react"
+import { useState, useEffect, useContext } from "react"
 
-
+import { GlobalContext } from "@/context/global"
 export default function FloatMenu() {
     const path = usePathname()
     const router = useRouter()
-
+    const { dataLogin } = useContext(GlobalContext)
     const [user, setUser] = useState({})
 
-    function alreadyLogin() {
-        const user = {
-            id: localStorage.getItem("user_id") || "",
-            name: localStorage.getItem("user_name") || "",
-            email: localStorage.getItem("user_email") || "",
-            jwt: localStorage.getItem("user_jwt") || "",
-        };
+    // function alreadyLogin() {
+    //     const user = {
+    //         id: localStorage.getItem("user_id") || "",
+    //         name: localStorage.getItem("user_name") || "",
+    //         email: localStorage.getItem("user_email") || "",
+    //         jwt: localStorage.getItem("user_jwt") || "",
+    //     };
 
-        setUser(user)
-    }
+    //     setUser(user)
+    // }
 
-    useEffect(() => {
-        alreadyLogin();
-    }, [])
+    // useEffect(() => {
+    //     alreadyLogin();
+    // }, [])
 
     return (
         <div className="menuContainer">
@@ -54,12 +54,12 @@ export default function FloatMenu() {
                 }
             </div>
             <div className={path == '/profile' ? "menuItemSelected" : "menuItem"}
-                onClick={user.id != "" ? () => router.push('/profile') : () => router.push('/')}
+                onClick={dataLogin?.id != "" ? () => router.push('/profile') : () => router.push('/')}
             >
                 {path == '/profile' ?
                     <h6>Perfil</h6>
                     :
-                    user.id != "" ?
+                    dataLogin?.id != "" ?
                         <img src="/icons/user-white.svg"></img>
                         :
                         <><img src="/icons/signin.svg"></img><p style={{ color: "#FFFFFF", marginLeft: "10px" }}>Login</p></>

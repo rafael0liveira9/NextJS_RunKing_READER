@@ -78,11 +78,8 @@ export default function Login() {
         throw new Error(`Erro na requisição: ${response.status} - ${response.statusText}`);
       } else {
         setLogin(data)
-        localStorage.setItem("user_id", data.id);
-        localStorage.setItem("user_name", data.name);
-        localStorage.setItem("user_email", data.email);
-        localStorage.setItem("user_phone", data.phone || "Não Preenchido");
-        localStorage.setItem("user_jwt", data.jwt);
+        localStorage.setItem("login", JSON.stringify(data))
+
 
         setConectionError(false)
         setDataError(false)

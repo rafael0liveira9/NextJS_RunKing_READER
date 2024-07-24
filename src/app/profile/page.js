@@ -14,56 +14,29 @@ import { GlobalContext } from "@/context/global"
 
 export default function Profile() {
   const router = useRouter()
-  const [user, setUser] = useState({})
-  const [event, setEvent] = useState({})
   const [confirmModalisOpen, setConfirmModalisOpen] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
-  const type = event?.type?.replaceAll("_", " ").replaceAll("-", " ") || ``
-  const eventDate = event.date ? new Date(event.date) : null;
-  const { setPCData, setLogin, pc } = useContext(GlobalContext)
-
-  let formattedDate = '';
-  let formattedTime = '';
-  if (eventDate) {
-    formattedDate = format(eventDate, 'dd/MM/yyyy', { locale: ptBR, timeZone: 'America/Sao_Paulo' });
-    formattedTime = format(eventDate, 'HH:mm', { locale: ptBR, timeZone: 'America/Sao_Paulo' });
-  }
-
+  const { setPCData, setLogin, pc, saveLoginInHarware, event, setEvent, dataLogin } = useContext(GlobalContext)
 
   useEffect(() => {
-    alreadyLogin();
-
-    if (user.id == "") {
+    if (!dataLogin) {
       router.push("/")
     }
   }, [])
 
-  function alreadyLogin() {
-    const user = {
-      name: localStorage.getItem("user_name") || "",
-      email: localStorage.getItem("user_email") || "",
-      phone: localStorage.getItem("user_phone") || "",
-      jwt: localStorage.getItem("user_jwt") || "",
-    };
-    const event = {
-      name: localStorage.getItem("event_title") || "",
-      type: localStorage.getItem("event_type") || "",
-      date: localStorage.getItem("event_date") || ""
-    };
-    setUser(user)
-    setEvent(event)
-  }
 
-  function logOut() {
+
+  async function logOut() {
     setIsLoading(true)
     setConfirmModalisOpen(false)
 
 
     setPCData(null)
     setLogin(null)
+    setEvent(null)
 
     localStorage.clear();
-
+    await saveLoginInHarware({ logout: true })
 
     setTimeout(() => {
       setIsLoading(false)
@@ -90,11 +63,11 @@ export default function Profile() {
             <img src="/images/king-crow.png"></img>
           </div> */}
           <div className="infoProfile">
-            {user?.name != "" && <div className="infoItem"><h6>Nome : </h6><p>{user.name}</p></div>}
-            {user?.email != "" && <div className="infoItem"><h6>E-mail : </h6><p>{user.email}</p></div>}
-            {event?.name != "" && <div className="infoItem"><h6>Evento : </h6><p>{event.name}</p></div>}
-            {event?.type != "" && <div className="infoItem"><h6>Ponto de Controle: </h6><p><a href={`https://api-tempo-real.runking.com.br/Data/${pc?.uuid}/csv`} target="_blank">{pc?.name}</a></p></div>}
-            {event?.date != "" && <div className="infoItem"><h6>Data : </h6><p>{formattedDate + " às " + formattedTime}</p></div>}
+            {dataLogin?.name != "" && <div className="infoItem"><h6>Nome : </h6><p>{dataLogin?.name}</p></div>}
+            {dataLogin?.email != "" && <div className="infoItem"><h6>E-mail : </h6><p>{dataLogin?.email}</p></div>}
+            {event?.name != "" && <div className="infoItem"><h6>Evento : </h6><p>{event?.name}</p></div>}
+            {pc?.uuid != "" && <div className="infoItem"><h6>Ponto de Controle: </h6><p><a href={`https://api-tempo-real.runking.com.br/Data/${pc?.uuid}/csv`} target="_blank">{pc?.name}</a></p></div>}
+            {event?.mainDate && <div className="infoItem"><h6>Data : </h6><p>{format(event.mainDate, 'dd/MM/yyyy', { locale: ptBR, timeZone: 'America/Sao_Paulo' }) + " às " + format(event.mainDate, 'HH:mm', { locale: ptBR, timeZone: 'America/Sao_Paulo' })}</p></div>}
           </div>
         </div>
         <div className="btnProfileDiv">

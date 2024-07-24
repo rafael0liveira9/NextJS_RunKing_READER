@@ -12,44 +12,10 @@ import ConfirmModal from "@/components/modal/confirmation";
 import TowerCard from "@/components/cards/towerCard";
 
 export default function EventSelect() {
-
-  const path = usePathname();
   const { setisReading, isReading, config, URLLOCALSERVICE } = useContext(GlobalContext);
   const [stopRModal, setStopRModal] = useState(false);
 
 
-  function alreadyLogin() {
-    const user = {
-      id: localStorage.getItem("user_id") || "",
-      name: localStorage.getItem("user_name") || "",
-      email: localStorage.getItem("user_email") || "",
-      jwt: localStorage.getItem("user_jwt") || "",
-    };
-
-    const event = {
-      id: localStorage.getItem("event_id") || "",
-      title: localStorage.getItem("event_title") || "",
-      type: localStorage.getItem("event_type") || "",
-      slug: localStorage.getItem("event_slug") || "",
-      logo: localStorage.getItem("event_logo") || "",
-      cep: localStorage.getItem("event_cep") || "",
-      address: localStorage.getItem("event_address") || "",
-      neighborhood: localStorage.getItem("event_neighborhood") || "",
-      city: localStorage.getItem("event_city") || "",
-      uf: localStorage.getItem("event_uf") || "",
-      country: localStorage.getItem("event_country") || "",
-      mainDate: localStorage.getItem("event_date") || "",
-      raiaOne: localStorage.getItem("event_raia_one") || "",
-      raiaTwo: localStorage.getItem("event_raia_two") || "",
-      raiaTree: localStorage.getItem("event_raia_tree") || "",
-    }
-  }
-
-
-
-  useEffect(() => {
-    alreadyLogin();
-  }, [path]);
 
   const start = async () => {
     const res = await fetch(`${URLLOCALSERVICE}startReader`, {

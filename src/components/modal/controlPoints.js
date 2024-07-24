@@ -9,7 +9,7 @@ export default function ControlPointModal({ close, event }) {
     const [cps, setCps] = useState()
 
 
-    const { URLLOCALSERVICE, setPCData, URL_API_RUNKING } = useContext(GlobalContext);
+    const { URLLOCALSERVICE, setPCData, URL_API_RUNKING, saveLoginInHarware } = useContext(GlobalContext);
 
 
     const handleInnerDivClick = (e) => {
@@ -24,13 +24,14 @@ export default function ControlPointModal({ close, event }) {
     const getCPs = async function () {
         try {
             const x = event.id
+            let user = JSON.parse(localStorage.getItem("login"))
 
             if (x != "" && x != null && x != undefined) {
 
                 const cps = await fetch(`${URL_API_RUNKING}controlPoints/${x}`, {
                     method: 'GET',
                     headers: {
-                        'Authorization': localStorage.getItem("user_jwt")
+                        'Authorization': user.jwt
                     }
                 });
 
@@ -70,7 +71,9 @@ export default function ControlPointModal({ close, event }) {
 
             localStorage.setItem("event_pc_name", pc.name);
             localStorage.setItem("event_pc_uuid", pc.uuid);
-
+            let login = JSON.parse(localStorage.getItem("login"))
+            let event = JSON.parse(localStorage.getItem("event"))
+            await saveLoginInHarware({ login, event, currentPc: pc })
             router.push("/home")
 
         } catch (error) {
