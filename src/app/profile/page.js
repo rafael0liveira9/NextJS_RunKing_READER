@@ -71,10 +71,10 @@ export default function Profile() {
           </div>
         </div>
         <div className="btnProfileDiv">
-          <button className="btnBlue btnProfile"
+          {dataLogin?.name !== "-" ? <button className="btnBlue btnProfile"
             disabled={confirmModalisOpen == true ? true : false}
             onClick={() => router.push("/select")}
-          >{isLoading === true ? <Loading></Loading> : "Trocar Evento"}</button>
+          >{isLoading === true ? <Loading></Loading> : "Trocar Evento"}</button> : null}
           <button className="btnRed btnProfile"
             disabled={confirmModalisOpen == true ? true : false}
             onClick={() => confirmModalOpen()}

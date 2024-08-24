@@ -18,7 +18,7 @@ export default function Login() {
   const [conectionError, setConectionError] = useState(false);
   const [modalConection, setModalConection] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const { URLLOCALSERVICE, URL_API_RUNKING, setLogin, dataLogin, pc, setPCData } = useContext(GlobalContext)
+  const { URLLOCALSERVICE, URL_API_RUNKING, setLogin, dataLogin, pc, setPCData, saveLoginInHarware } = useContext(GlobalContext)
 
 
 
@@ -35,7 +35,7 @@ export default function Login() {
         "PC": ""
       })
     });
-
+    saveLoginInHarware({ login: { id: "0", name: "-" } })
     router.push("/home");
   }
 
