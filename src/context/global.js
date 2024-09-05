@@ -11,6 +11,7 @@ export const GlobalProvider = ({ children }) => {
         serialNumber: null,
         status: "Parado",
         ip: "",
+        reportingIntervalSeconds: 0,
         totalReader: 0,
         totalCloud: 0,
         antena1: 0,
@@ -102,6 +103,8 @@ export const GlobalProvider = ({ children }) => {
                 localStorage.setItem("ip", jsonData.ip);
                 localStorage.setItem("totalReader", jsonData.totalReader);
                 localStorage.setItem("totalCloud", jsonData.totalCloud);
+                localStorage.setItem("totalCloud", jsonData.totalCloud);
+                localStorage.setItem("reportingIntervalSeconds", jsonData.reportingIntervalSeconds)
                 if (!isReading) {
                     if (jsonData.status == "Lendo") {
                         setisReading(true)

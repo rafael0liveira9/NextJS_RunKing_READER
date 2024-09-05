@@ -95,11 +95,13 @@ export default function Login() {
 
 
   useEffect(() => {
-    if (dataLogin) {
+    if (dataLogin && dataLogin.id != 0) {
       if (!pc) {
         router.push("/select")
       } else
         router.push("/home")
+    } else if (dataLogin && dataLogin.id == 0) {
+      router.push("/home")
     }
   }, [dataLogin, pc])
 

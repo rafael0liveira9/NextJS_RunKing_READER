@@ -20,6 +20,7 @@ export default function Settings() {
   const path = usePathname()
   const [isLoading, setIsLoading] = useState(false)
   const [ip, setIp] = useState();
+  const [reportingIntervalSeconds, setReportingIntervalSeconds] = useState();
   const [isModalGetHour, setIsModalGetHour] = useState(false)
   const { URLLOCALSERVICE } = useContext(GlobalContext)
   const [networks, setNetworks] = useState([])
@@ -27,6 +28,7 @@ export default function Settings() {
 
   async function getSettings() {
     setIp(localStorage.getItem("ip"))
+    setReportingIntervalSeconds(localStorage.getItem("reportingIntervalSeconds"))
     const res = await fetch(`${URLLOCALSERVICE}configurationHardware`, {
       method: 'GET',
       headers: {
@@ -52,6 +54,21 @@ export default function Settings() {
       })
     });
     localStorage.setItem("ip", ip);
+    setIsLoading(false)
+  }
+
+  async function saveReportingIntervalSeconds() {
+    setIsLoading(true)
+    const res = await fetch(`${URLLOCALSERVICE}configuration`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        "reportingIntervalSeconds": reportingIntervalSeconds
+      })
+    });
+    localStorage.setItem("reportingIntervalSeconds", reportingIntervalSeconds);
     setIsLoading(false)
   }
 
@@ -104,6 +121,7 @@ export default function Settings() {
             placeholder={!!ip && ip.length > 0 ? ip : ""}
             onChange={(e) => setIp(e.target.value)}
           ></input>
+
           <div className="settingsDivBtn">
             <button
               onClick={() => saveIp()}
@@ -111,6 +129,25 @@ export default function Settings() {
             >Salvar</button>
           </div>
         </div>
+
+        <div className="settingsReader">
+          <h5>Intervalo de Leitura (segundos)</h5>
+          <input
+            type="number"
+            className="inputText"
+            style={{ width: "100%", fontSize: "20px" }}
+            placeholder={!!reportingIntervalSeconds && reportingIntervalSeconds.length > 0 ? reportingIntervalSeconds : ""}
+            onChange={(e) => setReportingIntervalSeconds(e.target.value)}
+          ></input>
+
+          <div className="settingsDivBtn">
+            <button
+              onClick={() => saveReportingIntervalSeconds()}
+              className="btnGreen"
+            >Salvar</button>
+          </div>
+        </div>
+
         <div
           onClick={() => setIsModalGetHour(true)}
           className="settingsDateTime">

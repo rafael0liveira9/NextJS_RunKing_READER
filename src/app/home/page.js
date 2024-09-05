@@ -37,6 +37,7 @@ export default function EventSelect() {
     setStopRModal(false);
   }
 
+
   return (
     <main className="fullContainer">
       <Header></Header>
