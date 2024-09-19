@@ -14,7 +14,7 @@ import ConfirmModal from "@/components/modal/confirmation";
 export default function View() {
 
   const path = usePathname();
-  const { URLLOCALSERVICE, pc } = useContext(GlobalContext)
+  const { URLLOCALSERVICE, pc, isReading } = useContext(GlobalContext)
   const [stopRModal, setStopRModal] = useState(false);
   const [isLoading, setIsLoading] = useState(false)
   const [filesData, setFilesData] = useState([])
@@ -164,7 +164,9 @@ export default function View() {
                       <div className="archievListIcon">
                         <img onClick={() => { downloadFile(e.nome) }} src="/icons/download.svg" />
                         {pc && <img onClick={() => { setDataSelected(e.nome); setUploadModal(true); }} src="/icons/cloud.svg" />}
-                        <img onClick={() => { setDataSelected(e.nome); setStopRModal(true); }} src="/icons/trash.svg" />
+                        {!isReading &&
+                          <img onClick={() => { setDataSelected(e.nome); setStopRModal(true); }} src="/icons/trash.svg" />
+                        }
                       </div>
                     </div>
                     {(y + 1) != filesData?.length && <Separator color={"var(--grey-neutral-nine)"} width={"100%"} height={"1px"}></Separator>}
@@ -174,7 +176,7 @@ export default function View() {
               :
               <div className="archievNoListAvaible">
                 <p>
-                  - No files available
+                  - Sem arquivos disponíveis
                 </p>
               </div>
             }

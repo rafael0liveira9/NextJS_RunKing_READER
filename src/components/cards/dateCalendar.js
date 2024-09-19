@@ -2,14 +2,14 @@
 
 
 
-export default function CardSelectClockDate({ text }) {
+export default function CardSelectClockDate({ text, disabled = false }) {
 
     return (
-        <div className="cardSelectClockDate">
-            <div className="cardSelectInside">
+        <div className={!disabled ? "cardSelectClockDate" : "cardSelectClockDateDisable"}>
+            <div className={!disabled ? "cardSelectInside" : "cardSelectClockDateHomeDisable"}>
                 {!!text ? "" : <img src="/images/icon-lock-calendar.jpg"></img>}
                 <p>{!!text ? text : `Select Date & Time`}</p>
             </div>
-        </div>
+        </div >
     )
 }

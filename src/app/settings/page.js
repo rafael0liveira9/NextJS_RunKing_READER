@@ -22,7 +22,7 @@ export default function Settings() {
   const [ip, setIp] = useState();
   const [reportingIntervalSeconds, setReportingIntervalSeconds] = useState();
   const [isModalGetHour, setIsModalGetHour] = useState(false)
-  const { URLLOCALSERVICE } = useContext(GlobalContext)
+  const { URLLOCALSERVICE, isReading } = useContext(GlobalContext)
   const [networks, setNetworks] = useState([])
   const [currentNetwork, setCurrentNetwork] = useState("")
 
@@ -123,10 +123,16 @@ export default function Settings() {
           ></input>
 
           <div className="settingsDivBtn">
-            <button
-              onClick={() => saveIp()}
-              className="btnGreen"
-            >Salvar</button>
+            {!isReading ?
+              <button
+                onClick={() => saveIp()}
+                className="btnGreen"
+              >Salvar</button> :
+              <button
+
+                className="btnDisabled"
+              >Salvar</button>
+            }
           </div>
         </div>
 
@@ -141,20 +147,34 @@ export default function Settings() {
           ></input>
 
           <div className="settingsDivBtn">
-            <button
-              onClick={() => saveReportingIntervalSeconds()}
-              className="btnGreen"
-            >Salvar</button>
+            {!isReading ?
+              <button
+                onClick={() => saveReportingIntervalSeconds()}
+                className="btnGreen"
+              >Salvar</button> :
+              <button
+
+                className="btnDisabled"
+              >Salvar</button>
+            }
           </div>
         </div>
+        {!isReading ?
+          <div
+            onClick={() => setIsModalGetHour(true)}
+            className="settingsDateTime">
+            <h5>Data e Hora do Reader</h5>
+            <CardSelectClockDate
+              text={"Configurar baseado neste dispostivo​"}></CardSelectClockDate>
+          </div> :
+          <div
 
-        <div
-          onClick={() => setIsModalGetHour(true)}
-          className="settingsDateTime">
-          <h5>Data e Hora do Reader</h5>
-          <CardSelectClockDate
-            text={"Configurar baseado neste dispostivo​"}></CardSelectClockDate>
-        </div>
+            className="settingsDateTime">
+            <h5>Data e Hora do Reader</h5>
+            <CardSelectClockDate disabled={true}
+              text={"Configurar baseado neste dispostivo​"}></CardSelectClockDate>
+          </div>
+        }
 
         <div
           className="settingsDateTime">

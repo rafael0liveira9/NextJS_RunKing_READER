@@ -19,6 +19,7 @@ export const GlobalProvider = ({ children }) => {
         antena3: 0,
         antena4: 0,
         isInternet: false,
+        temp: 0,
     });
 
     const [dataLogin, setDataLogin] = useState(null)
@@ -105,6 +106,7 @@ export const GlobalProvider = ({ children }) => {
                 localStorage.setItem("totalCloud", jsonData.totalCloud);
                 localStorage.setItem("totalCloud", jsonData.totalCloud);
                 localStorage.setItem("reportingIntervalSeconds", jsonData.reportingIntervalSeconds)
+                localStorage.setItem("temp", jsonData.temp)
                 if (!isReading) {
                     if (jsonData.status == "Lendo") {
                         setisReading(true)

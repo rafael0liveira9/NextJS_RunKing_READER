@@ -1325,6 +1325,21 @@ textarea:focus {
   flex-wrap: wrap;
 }
 
+.cardSelectClockDateDisable {
+  width: 100%;
+  height: auto;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  padding: 30px 15px;
+  border: 1px solid var(--grey-neutral-five);
+  background-color: var(--grey-neutral-eigth);
+  border-radius: 10px;
+  text-align: center;
+  flex-wrap: wrap;
+}
+
 .cardSelectClockDateHome {
   width: 100%;
   height: auto;
@@ -1335,6 +1350,22 @@ textarea:focus {
   padding: 30px 15px;
   border: 1px solid var(--green-primary);
   background-color: #3fe8be12;
+  border-radius: 10px;
+  text-align: center;
+  flex-wrap: wrap;
+  gap: 50px;
+}
+
+.cardSelectClockDateHomeDisable {
+  width: 100%;
+  height: auto;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  padding: 30px 15px;
+  /* border: 1px solid var(--grey-neutral-eigth); */
+  background-color: var(--grey-neutral-eigth);
   border-radius: 10px;
   text-align: center;
   flex-wrap: wrap;
