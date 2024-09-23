@@ -12,6 +12,7 @@ import CardSelectClockDate from "@/components/cards/dateCalendar";
 import CardselectWiFi from "@/components/cards/selectWiFi";
 
 import ConfirmModal from "@/components/modal/confirmation";
+import AlertModal from "@/components/modal/alert";
 import { GlobalContext } from "@/context/global"
 
 
@@ -25,7 +26,8 @@ export default function Settings() {
   const { URLLOCALSERVICE, isReading } = useContext(GlobalContext)
   const [networks, setNetworks] = useState([])
   const [currentNetwork, setCurrentNetwork] = useState("")
-
+  const [showModalMessage, setShowModalMessage] = useState(false)
+  const [alertMessage, setAlertMessage] = useState("")
   async function getSettings() {
     setIp(localStorage.getItem("ip"))
     setReportingIntervalSeconds(localStorage.getItem("reportingIntervalSeconds"))
@@ -36,7 +38,7 @@ export default function Settings() {
       }
     });
     let js = await res.json()
-    setNetworks(js.available_networks)
+    setNetworks(js.available_networks ? js.available_networks.filter(e => e != "") : [])
     if (js.connected_network)
       setCurrentNetwork(js.connected_network)
   }
@@ -55,6 +57,9 @@ export default function Settings() {
     });
     localStorage.setItem("ip", ip);
     setIsLoading(false)
+    setAlertMessage("Ip salvo com sucesso")
+    setShowModalMessage(true)
+
   }
 
   async function saveReportingIntervalSeconds() {
@@ -70,6 +75,8 @@ export default function Settings() {
     });
     localStorage.setItem("reportingIntervalSeconds", reportingIntervalSeconds);
     setIsLoading(false)
+    setAlertMessage("Intervalo de Leitura salvo com sucesso")
+    setShowModalMessage(true)
   }
 
   function isoConvert(dataString) {
@@ -94,6 +101,9 @@ export default function Settings() {
     });
     localStorage.setItem("dateTimeSystem", y);
     setIsModalGetHour(false)
+
+    setAlertMessage("Data e hora do dispositivo sincronizado com a da maquina com sucesso")
+    setShowModalMessage(true)
   }
 
   function confirmModalClose() {
@@ -110,7 +120,7 @@ export default function Settings() {
       <Header></Header>
       {isModalGetHour == true &&
         <ConfirmModal confirm={() => saveNewDate()} cancel={() => confirmModalClose()} question={"Deseja sincronizar a hora do sistema"}></ConfirmModal>}
-
+      {showModalMessage && <AlertModal message={alertMessage} status={showModalMessage} setStatus={setShowModalMessage} />}
       <div className="settingsContent">
         <div className="settingsReader">
           <h5>Ip do Reader</h5>
